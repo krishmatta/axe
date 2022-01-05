@@ -1,11 +1,12 @@
 import click
 import requests
 
-@click.command()
-@click.argument("question")
-def cli(question):
-    click.echo(query(search(question)))
+@click.group()
+def cli():
+    pass
 
+@cli.command()
+@click.argument("question")
 def search(question):
     parameters = {
         "action": "query",
@@ -27,7 +28,8 @@ def search(question):
     for index, value in enumerate(search_list):
         click.echo(f"{index + 1}) {value[1]}")
     input_value = click.prompt("Please enter the corresponding number of the article you want to choose", type=int)
-    return search_list[input_value - 1][1]
+
+    click.echo(query(search_list[input_value - 1][1]))
 
 def query(title):
     parameters = {
@@ -42,3 +44,21 @@ def query(title):
 
     response = requests.get("https://en.wikipedia.org/w/api.php", params=parameters)
     return list(response.json()["query"]["pages"].values())[0]["extract"].split("\n")[0]
+
+@cli.command()
+def random():
+    parameters = {
+        "action": "query",
+        "format": "json",
+        "generator": "random",
+        "prop": "extracts",
+        "exintro": 1,
+        "explaintext": 1,
+        "redirects": 1,
+        "grnnamespace": 0,
+    }
+
+    response = requests.get("https://en.wikipedia.org/w/api.php", params=parameters)
+    page = list(response.json()["query"]["pages"].values())[0]
+    click.echo(f"Page Title: {page['title']}")
+    click.echo(page["extract"])
