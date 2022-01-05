@@ -1,5 +1,4 @@
 import click
-import re
 import requests
 
 @click.command()
