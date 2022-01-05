@@ -13,20 +13,20 @@ def cli(question):
     }
 
     response = requests.get("https://en.wikipedia.org/w/api.php", params=parameters)
-    for x in response.json()["query"]["pages"].values():
-        content = x["extract"]
+    click.echo(parse_page(list(response.json()["query"]["pages"].values())[0]["extract"]))
 
-        content = content.split('</p>')
+def parse_page(extract):
+    extract = extract.split('</p>')
 
-        tags = re.compile("<.*?>")
-        content = map(lambda x: re.sub(tags, " ", x), content)
+    tags = re.compile("<.*?>")
+    extract = map(lambda x: re.sub(tags, " ", x), extract)
 
-        content = next(filter(lambda x: x and not x.isspace(), content)) # Have to use this method rather than relying on HTML paragaph tags to extract the first paragraph due to malformed HTML
+    extract = next(filter(lambda x: x and not x.isspace(), extract)) # Have to use this method rather than relying on HTML paragaph tags to extract the first paragraph due to malformed HTML
 
-        whitespace = re.compile(" +")
-        content = re.sub(whitespace, " ", content)
+    whitespace = re.compile(" +")
+    extract = re.sub(whitespace, " ", extract)
 
-        breaks = re.compile("\n")
-        content = re.sub(breaks, "", content)
+    breaks = re.compile("\n")
+    extract = re.sub(breaks, "", extract)
 
-        click.echo(content)
+    return extract
