@@ -5,15 +5,36 @@ import requests
 @click.command()
 @click.argument("question")
 def cli(question):
+    click.echo(parse_page(query(search(question))))
+
+def search(question):
+    parameters = {
+        "action": "opensearch",
+        "format": "json",
+        "search": question,
+    }
+
+    response = requests.get("https://en.wikipedia.org/w/api.php", params=parameters)
+
+    if(len(response.json()[1]) == 1):
+        return response.json()[1][0]
+
+    for index, value in enumerate(response.json()[1]):
+        click.echo(f"{index + 1}) {value}")
+
+    input_value = click.prompt("Please enter the corresponding number of the article you want to choose", type=int)
+    return response.json()[1][input_value - 1]
+
+def query(title):
     parameters = {
         "action": "query",
         "format": "json",
         "prop": "extracts",
-        "titles": question,
+        "titles": title,
     }
-
+    
     response = requests.get("https://en.wikipedia.org/w/api.php", params=parameters)
-    click.echo(parse_page(list(response.json()["query"]["pages"].values())[0]["extract"]))
+    return list(response.json()["query"]["pages"].values())[0]["extract"]
 
 def parse_page(extract):
     extract = extract.split('</p>')
