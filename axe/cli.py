@@ -9,21 +9,26 @@ def cli(question):
 
 def search(question):
     parameters = {
-        "action": "opensearch",
+        "action": "query",
         "format": "json",
-        "search": question,
+        "generator": "search",
+        "gsrsearch": question,
+        "prop": "categories",
+        "cllimit": "max",
     }
 
     response = requests.get("https://en.wikipedia.org/w/api.php", params=parameters)
 
-    if(len(response.json()[1]) == 1):
-        return response.json()[1][0]
+    search_list = [(x["index"], x["title"]) for x in filter(lambda y: not any([z["title"] == "Category:All disambiguation pages" for z in y["categories"]]), response.json()["query"]["pages"].values())]
+    list.sort(search_list)
 
-    for index, value in enumerate(response.json()[1]):
-        click.echo(f"{index + 1}) {value}")
+    if(len(search_list) == 1):
+        return search_list[0][1]
 
+    for index, value in enumerate(search_list):
+        click.echo(f"{index + 1}) {value[1]}")
     input_value = click.prompt("Please enter the corresponding number of the article you want to choose", type=int)
-    return response.json()[1][input_value - 1]
+    return search_list[input_value - 1][1]
 
 def query(title):
     parameters = {
