@@ -44,3 +44,21 @@ def query(title):
 
     response = requests.get("https://en.wikipedia.org/w/api.php", params=parameters)
     return list(response.json()["query"]["pages"].values())[0]["extract"].split("\n")[0]
+
+@cli.command()
+def random():
+    parameters = {
+        "action": "query",
+        "format": "json",
+        "generator": "random",
+        "prop": "extracts",
+        "exintro": 1,
+        "explaintext": 1,
+        "redirects": 1,
+        "grnnamespace": 0,
+    }
+
+    response = requests.get("https://en.wikipedia.org/w/api.php", params=parameters)
+    page = list(response.json()["query"]["pages"].values())[0]
+    click.echo(f"Page Title: {page['title']}")
+    click.echo(page["extract"])
