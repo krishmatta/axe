@@ -2,6 +2,12 @@
 
 axe is a command line tool that provides information from any Wikipedia page straight to your terminal. It can be used to either provide information from a specified page, or to provide information from a random page.
 
+## Installation
+To install axe,
+1. Clone the repository with `git clone https://github.com/krishxmatta/axe.git`
+2. Enter the repository with `cd axe`
+3. Install with `python setup.py install`
+
 ## Usage
 axe has two main functionalities: querying information from a specified Wikipedia page, and querying information from a random Wikipedia page. In either case, axe will print out the first paragraph found in the Wikipedia page.
 
