@@ -11,7 +11,7 @@ To install axe,
 ## Usage
 axe has two main functionalities: querying information from a specified Wikipedia page, and querying information from a random Wikipedia page. In either case, axe will print out the first paragraph found in the Wikipedia page.
 
-To get information from a specific page, use the `search` subcommand followed by the title of the page you want to query: `axe search <page-title>`.
+To get information from a specific page, use the `search` subcommand followed by the title of the page you want to query: `axe search <page-title>`. If several pages were found, then axe will provide you with several page titles and ask you to select which page you want information from.
 
 To get information from a random page, use the `random` subcommand: `axe random`.
 
