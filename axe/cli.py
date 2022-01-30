@@ -1,9 +1,11 @@
 import click
 import requests
 
+
 @click.group()
 def cli():
     pass
+
 
 @cli.command()
 @click.argument("question")
@@ -31,6 +33,7 @@ def search(question):
 
     click.echo(query(search_list[input_value - 1][1]))
 
+
 def query(title):
     parameters = {
         "action": "query",
@@ -44,6 +47,7 @@ def query(title):
 
     response = requests.get("https://en.wikipedia.org/w/api.php", params=parameters)
     return list(response.json()["query"]["pages"].values())[0]["extract"].split("\n")[0]
+
 
 @cli.command()
 def random():
