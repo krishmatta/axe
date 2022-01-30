@@ -1,4 +1,5 @@
 import click
+import re
 import requests
 
 
@@ -46,7 +47,9 @@ def query(title):
     }
 
     response = requests.get("https://en.wikipedia.org/w/api.php", params=parameters)
-    return list(response.json()["query"]["pages"].values())[0]["extract"].split("\n")[0]
+    ret = list(response.json()["query"]["pages"].values())[0]["extract"].split("\n")[0]
+    ret = re.sub(' +', ' ', ret)
+    return ret
 
 
 @cli.command()
